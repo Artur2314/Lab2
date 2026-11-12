@@ -1,0 +1,44 @@
+-- 1. Выбрать всех клиентов в возрасте от 18 до 30 лет, проживающих в Москве.
+
+SELECT * FROM client 
+WHERE AGE(CURRENT_DATE, date_of_birth) BETWEEN '18 years' AND '30 years'
+  AND address LIKE '%Москва%';
+
+
+-- 2. Выбрать всех клиентов, сделавших заказы в 2008 году.
+SELECT DISTINCT c.*
+FROM client c
+JOIN orders o ON c.client_code = o.client_code
+WHERE EXTRACT(YEAR FROM o.order_date) = 2008;
+
+--3. Создать таблицу, содержащую данные 2 запроса с указанием контактных телефонов.
+CREATE TABLE clients_2008_orders AS
+SELECT DISTINCT 
+    c.client_code, 
+    c.last_name, 
+    c.first_name, 
+    c.patronymic, 
+	c.date_of_birth,
+	c.representative_of_company,
+    c.address,
+	c.contact_phone
+FROM client c
+JOIN orders o ON c.client_code = o.client_code
+WHERE EXTRACT(YEAR FROM o.order_date) = 2008;
+
+--4. Добавить в созданную таблицу клиентов, у которых отсутсвует контактный телефон. 
+INSERT INTO clients_2008_orders (
+    client_code, 
+    last_name, 
+    first_name, 
+    patronymic, 
+    date_of_birth, 
+    representative_of_company, 
+    address, 
+    contact_phone
+)
+SELECT client_code, last_name, first_name, patronymic, date_of_birth, representative_of_company, address, contact_phone
+FROM client
+WHERE contact_phone IS NULL;
+
+--5. В созданной 
