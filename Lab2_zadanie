@@ -43,7 +43,22 @@ WHERE contact_phone IS NULL;
  
 --5. В созданной таблице для всех клиентов, у которых номер телефона начинается на 8, 
 заменить первую цифру на 7.
+UPDATE clients_2008_orders 
+SET contact_phone = '+7' || RIGHT(contact_phone, LENGTH(contact_phone) - 1)
+WHERE contact_phone LIKE '8%';
 
 --6. Удалить из созданной таблицы всех клиентов с фамилиями на буквы «А», «Б» и «В».
 
---7. Посчитать средний срок сборки заказов для каждого клиента.
+DELETE FROM clients_2008_orders 
+WHERE last_name LIKE 'А%' 
+   OR last_name LIKE 'Б%' 
+   OR last_name LIKE 'В%';
+
+--7. Посчитать средний срок сборки заказов для каждого клиента.
+SELECT 
+    c.last_name, 
+    c.first_name, 
+    AVG(o.assembly_deadline - o.order_date) AS avg_assembly_days
+FROM client c
+JOIN orders o ON c.client_code = o.client_code
+GROUP BY c.client_code, c.last_name, c.first_name;
