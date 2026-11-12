@@ -12,7 +12,6 @@ JOIN orders o ON c.client_code = o.client_code
 WHERE EXTRACT(YEAR FROM o.order_date) = 2008;
 
 --3. Создать таблицу, содержащую данные 2 запроса с указанием контактных телефонов.
-CREATE TABLE clients_2008_orders AS
 SELECT DISTINCT 
     c.client_code, 
     c.last_name, 
