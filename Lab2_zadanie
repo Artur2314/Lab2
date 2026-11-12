@@ -21,6 +21,7 @@ SELECT DISTINCT
 	c.representative_of_company,
     c.address,
 	c.contact_phone
+INTO clients_2008_orders
 FROM client c
 JOIN orders o ON c.client_code = o.client_code
 WHERE EXTRACT(YEAR FROM o.order_date) = 2008;
@@ -36,9 +37,14 @@ INSERT INTO clients_2008_orders (
     address, 
     contact_phone
 )
-SELECT client_code, last_name, first_name, patronymic, date_of_birth, representative_of_company, address, contact_phone
-FROM client
-WHERE contact_phone IS NULL;
+SELECT c.client_code, c.last_name, c.first_name, c.patronymic, c.date_of_birth, c.representative_of_company, c.address, c.contact_phone
+FROM client c
+WHERE c.contact_phone IS NULL
+AND NOT EXISTS (
+SELECT 1 
+FROM clients_2008_orders t
+WHERE t.client_code = c.client_code
+)
  
 --5. В созданной таблице для всех клиентов, у которых номер телефона начинается на 8, 
 заменить первую цифру на 7.
@@ -55,6 +61,7 @@ WHERE last_name LIKE 'А%'
 
 --7. Посчитать средний срок сборки заказов для каждого клиента.
 SELECT 
+    c.client_code,
     c.last_name, 
     c.first_name, 
     AVG(o.assembly_deadline - o.order_date) AS avg_assembly_days
