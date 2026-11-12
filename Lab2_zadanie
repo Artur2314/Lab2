@@ -40,5 +40,10 @@ INSERT INTO clients_2008_orders (
 SELECT client_code, last_name, first_name, patronymic, date_of_birth, representative_of_company, address, contact_phone
 FROM client
 WHERE contact_phone IS NULL;
+ 
+--5. В созданной таблице для всех клиентов, у которых номер телефона начинается на 8, 
+заменить первую цифру на 7.
 
---5. В созданной 
+--6. Удалить из созданной таблицы всех клиентов с фамилиями на буквы «А», «Б» и «В».
+
+--7. Посчитать средний срок сборки заказов для каждого клиента.
